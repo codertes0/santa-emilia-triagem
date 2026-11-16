@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Santa Emília — Encontre Seu Carro Ideal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F2F2F2;
+      --surface:      #FFFFFF;
+      --surface-alt:  #F7F7F7;
+      --border:       #E2E2E2;
+      --border-hover: #BDBDBD;
+      --brand:        #1A1A1A;
+      --brand-hover:  #333333;
+      --brand-dim:    rgba(26, 26, 26, 0.06);
+      --text:         #1A1A1A;
+      --muted:        #6B6B6B;
+      --light:        #A0A0A0;
+
+      --f-display: 'Montserrat', system-ui, sans-serif;
+      --f-body:    'DM Sans', system-ui, sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.07);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--f-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Progress bar ──────────────────────────────────────────── */
+    #progress-track {
+      position: fixed; top: 0; left: 0; right: 0; height: 3px;
+      background: rgba(255,255,255,0.15); z-index: 200;
+    }
+    #progress-fill {
+      height: 100%;
+      background: #FFFFFF;
+      transition: width 0.55s var(--ease-out);
+      width: 0%;
+    }
+
+    /* ── Shell ─────────────────────────────────────────────────── */
+    #shell {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    header {
+      background: var(--brand);
+      border-bottom: none;
+      padding: 0 48px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+
+
+
+    .logo {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 0; line-height: 1; cursor: default;
+    }
+    .logo-anos {
+      font-family: var(--f-display);
+      font-size: 0.48rem; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(255,255,255,0.65);
+      align-self: center;
+    }
+    .logo-name {
+      font-family: var(--f-display);
+      font-size: 1.25rem; font-weight: 800; letter-spacing: -0.01em;
+      color: #FFFFFF; display: block; line-height: 1.1;
+    }
+    .logo-sub {
+      font-family: var(--f-display);
+      font-size: 0.45rem; font-weight: 400; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.6);
+      align-self: center;
+    }
+
+    .step-tag {
+      font-family: var(--f-display);
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: rgba(255,255,255,0.6);
+    }
+
+    /* ── Main ──────────────────────────────────────────────────── */
+    main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 40px 48px 80px;
+    }
+
+    .screen { width: 100%; max-width: 900px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .anim-in   { animation: fadeUp   0.4s var(--ease-out) both; }
+    .anim-back { animation: fadeDown 0.4s var(--ease-out) both; }
+
+    /* ── Welcome ───────────────────────────────────────────────── */
+    .welcome { text-align: center; }
+
+    .eyebrow {
+      display: inline-block;
+      font-family: var(--f-display);
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 16px; border-radius: 999px;
+      margin-bottom: 32px;
+    }
+
+    .welcome h1 {
+      font-family: var(--f-display);
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      font-weight: 800; line-height: 1.08; letter-spacing: -0.02em;
+      color: var(--brand); margin-bottom: 8px;
+    }
+    .welcome h1 em { font-style: normal; color: var(--brand); }
+
+    .welcome-slogan {
+      font-family: var(--f-display);
+      font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em;
+      color: var(--brand); margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .welcome-sub {
+      font-size: 0.95rem; font-weight: 400; color: var(--muted);
+      line-height: 1.7; max-width: 440px; margin: 0 auto 40px;
+    }
+
+    .brands-row {
+      display: flex; gap: 8px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 44px;
+    }
+    .brand-chip {
+      font-family: var(--f-display);
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 6px 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ── Primary button ────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--brand); color: #fff;
+      font-family: var(--f-display); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 15px 40px; border: none; border-radius: 4px;
+      cursor: pointer; transition: all 0.2s var(--ease-out);
+    }
+    .btn-primary:hover {
+      background: var(--brand-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .btn-primary svg { transition: transform 0.2s; }
+    .btn-primary:hover svg { transform: translateX(4px); }
+
+    /* ── Ghost button ──────────────────────────────────────────── */
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+      font-family: var(--f-display); font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 11px 22px; border-radius: 4px; cursor: pointer;
+      transition: all 0.2s; box-shadow: var(--shadow-sm);
+    }
+    .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
+
+    /* ── Question layout ───────────────────────────────────────── */
+    .q-label {
+      font-family: var(--f-display);
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--light);
+      display: block; margin-bottom: 14px;
+    }
+
+    .q-text {
+      font-family: var(--f-display);
+      font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+      font-weight: 800; line-height: 1.2; letter-spacing: -0.02em;
+      color: var(--brand); margin-bottom: 36px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    /* Quando a pergunta tem 5 opções, a última fica centralizada */
+    .options-grid--5 .opt:nth-child(5) {
+      grid-column: 1 / -1;
+      max-width: calc(50% - 6px);
+      margin: 0 auto;
+    }
+
+    /* Option card */
+    .opt {
+      position: relative;
+      padding: 20px 22px 18px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer; text-align: left;
+      transition: all 0.2s var(--ease-out);
+      opacity: 0;
+      animation: fadeUp 0.38s var(--ease-out) both;
+      box-shadow: var(--shadow-sm);
+    }
+    .opt:nth-child(1) { animation-delay: 0.05s; }
+    .opt:nth-child(2) { animation-delay: 0.10s; }
+    .opt:nth-child(3) { animation-delay: 0.15s; }
+    .opt:nth-child(4) { animation-delay: 0.20s; }
+    .opt:nth-child(5) { animation-delay: 0.25s; }
+
+    .opt:hover {
+      border-color: var(--brand);
+      background: var(--brand-dim);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .opt.selected {
+      border-color: var(--brand);
+      background: var(--brand-dim);
+      box-shadow: 0 0 0 3px rgba(26,26,26,0.1);
+    }
+    .opt.selected::after {
+      content: '';
+      position: absolute; top: 14px; right: 16px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--brand);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l2.5 2.5L9 1' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: center; background-size: 10px;
+    }
+
+    .opt-icon { font-size: 1.5rem; display: block; margin-bottom: 10px; }
+
+    .opt-main {
+      font-family: var(--f-display); font-size: 1rem; font-weight: 700;
+      color: var(--brand); display: block; margin-bottom: 3px; letter-spacing: -0.01em;
+    }
+
+    .opt-sub {
+      font-size: 0.78rem; font-weight: 400; color: var(--muted); display: block;
+    }
+
+    /* ── Question nav ──────────────────────────────────────────── */
+    .q-nav {
+      margin-top: 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .dots { display: flex; gap: 6px; align-items: center; }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--border); transition: all 0.3s;
+    }
+    .dot.active { background: var(--brand); width: 20px; border-radius: 3px; }
+    .dot.done   { background: rgba(26,26,26,0.25); }
+
+    /* ── Results ───────────────────────────────────────────────── */
+    .results-heading {
+      font-family: var(--f-display);
+      font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+      font-weight: 800; line-height: 1.15; letter-spacing: -0.02em;
+      color: var(--brand); margin-bottom: 10px;
+    }
+    .results-heading em { font-style: normal; color: var(--brand); }
+
+    .results-sub {
+      font-size: 0.9rem; font-weight: 400; color: var(--muted);
+      margin-bottom: 36px; line-height: 1.7;
+    }
+
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px; margin-bottom: 40px;
+    }
+
+    /* Car card */
+    .car-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden;
+      opacity: 0; animation: fadeUp 0.45s var(--ease-out) both;
+      transition: all 0.25s var(--ease-out);
+      box-shadow: var(--shadow-sm);
+    }
+    .car-card:nth-child(1) { animation-delay: 0.08s; }
+    .car-card:nth-child(2) { animation-delay: 0.16s; }
+    .car-card:nth-child(3) { animation-delay: 0.24s; }
+    .car-card:nth-child(4) { animation-delay: 0.32s; }
+
+    .car-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Accent top strip per brand */
+    .car-strip {
+      height: 3px;
+    }
+    .strip-toyota     { background: #EB0A1E; }
+    .strip-volkswagen { background: #001E50; }
+    .strip-renault    { background: #EFDF00; }
+    .strip-gac        { background: #0050C8; }
+    .strip-seminovos  { background: #2D6A4F; }
+
+    .car-top { padding: 20px 20px 16px; }
+
+    /* Brand badge */
+    .badge {
+      display: inline-flex; align-items: center;
+      font-family: var(--f-display);
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .badge-toyota      { background: #FEE8EA; color: #C41020; }
+    .badge-volkswagen  { background: #E8EEF8; color: #001E50; }
+    .badge-renault     { background: #FDFBE8; color: #B8960A; }
+    .badge-gac         { background: #E6F0FF; color: #0050C8; }
+    .badge-seminovos   { background: #E8F5EE; color: #1D6A45; }
+
+    /* Match bar */
+    .match-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .match-track {
+      flex: 1; height: 4px; background: var(--bg); border-radius: 2px; overflow: hidden;
+    }
+    .match-fill {
+      height: 100%; background: var(--brand);
+      border-radius: 2px; width: 0%; transition: width 1.1s var(--ease-out);
+    }
+    .match-pct {
+      font-family: var(--f-display);
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;
+      color: var(--brand); white-space: nowrap;
+    }
+
+    .car-name {
+      font-family: var(--f-display); font-size: 1.5rem; font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--brand); margin-bottom: 4px;
+    }
+    .car-price {
+      font-family: var(--f-display);
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+      color: var(--muted); margin-bottom: 10px;
+    }
+    .car-desc {
+      font-size: 0.83rem; font-weight: 400; color: var(--muted); line-height: 1.6;
+    }
+
+    .car-bottom {
+      padding: 14px 20px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-alt);
+    }
+    .btn-ver {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: none; border: none; cursor: pointer;
+      font-family: var(--f-display); font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand);
+      padding: 0; transition: gap 0.2s, opacity 0.2s;
+      text-decoration: none;
+    }
+    .btn-ver:hover { gap: 12px; opacity: 0.65; }
+    .btn-ver .arrow { font-size: 0.9rem; }
+
+    /* Results footer */
+    .results-footer {
+      display: flex; justify-content: center;
+    }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      header { padding: 0 20px; }
+      main   { padding: 24px 20px 60px; }
+      .options-grid { grid-template-columns: 1fr; }
+      .q-text { margin-bottom: 24px; }
+      .welcome h1 { font-size: 2.4rem; }
+      .cars-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-track"><div id="progress-fill"></div></div>
+
+<div id="shell">
+  <header id="header">
+    <div class="logo">
+      <span class="logo-anos">120 anos</span>
+      <span class="logo-name">Santa Emília</span>
+      <span class="logo-sub">Autos e Motos</span>
+    </div>
+    <span class="step-tag" id="step-tag"></span>
+  </header>
+  <main id="main"></main>
+</div>
+
+<script>
+/* ─── Data ─────────────────────────────────────────────────────── */
+const QUESTIONS = [
+  {
+    label: 'Etapa 01 de 05',
+    text: 'Qual será a principal utilização do veículo?',
+    options: [
+      { icon: '🏙️', main: 'Uso urbano diário',          sub: 'deslocamentos, trabalho e rotina',          tags: ['urban'] },
+      { icon: '🛣️', main: 'Viagens em família',          sub: 'conforto e autonomia em longas distâncias', tags: ['family','comfort','space'] },
+      { icon: '🔧', main: 'Uso profissional e carga',    sub: 'transporte, obra e atividades rurais',      tags: ['work','cargo','practical'] },
+      { icon: '🏔️', main: 'Off-road e trilhas',          sub: 'terrenos irregulares e estradas de terra',  tags: ['adventure','offroad','4x4'] },
+    ]
+  },
+  {
+    label: 'Etapa 02 de 05',
+    text: 'Qual é o seu orçamento disponível?',
+    options: [
+      { icon: '💡', main: 'Até R$ 80.000',         sub: 'melhor custo-benefício do segmento',    tags: ['budget_low'] },
+      { icon: '⭐', main: 'De R$ 80 a R$ 140 mil', sub: 'equilíbrio entre qualidade e preço',    tags: ['budget_mid'] },
+      { icon: '✨', main: 'De R$ 140 a R$ 250 mil', sub: 'acabamento, conforto e tecnologia',    tags: ['budget_high'] },
+      { icon: '👑', main: 'Acima de R$ 250.000',   sub: 'versões topo de linha e premium',       tags: ['budget_premium'] },
+    ]
+  },
+  {
+    label: 'Etapa 03 de 05',
+    text: 'Qual categoria de veículo você prefere?',
+    options: [
+      { icon: '🚗', main: 'Hatch',             sub: 'compacto, ágil e econômico na cidade',    tags: ['hatch'] },
+      { icon: '🚘', main: 'Sedan',             sub: 'porta-malas amplo, conforto e estilo',    tags: ['sedan'] },
+      { icon: '🚐', main: 'SUV ou Crossover',  sub: 'altura, versatilidade e espaço interno',  tags: ['suv','crossover'] },
+      { icon: '🚚', main: 'Pickup',            sub: 'capacidade de carga e tração',            tags: ['pickup','work','cargo'] },
+      { icon: '💎', main: 'Veículo Seminovo',  sub: 'procedência garantida e melhor custo',    tags: ['used','budget_low','budget_mid','practical'] },
+    ]
+  },
+  {
+    label: 'Etapa 04 de 05',
+    text: 'Quantos ocupantes utilizarão o veículo?',
+    options: [
+      { icon: '👤',       main: '1 ou 2 ocupantes',     sub: 'mobilidade individual ou a dois',     tags: ['small_group'] },
+      { icon: '👨‍👩‍👦',   main: '3 ou 4 ocupantes',     sub: 'casal com filhos ou grupo pequeno',   tags: ['medium_group'] },
+      { icon: '👨‍👩‍👧‍👦', main: '5 ocupantes',           sub: 'família completa no dia a dia',        tags: ['large_group','space'] },
+      { icon: '🏠',       main: 'Acima de 5 ocupantes', sub: 'necessidade de grande capacidade',     tags: ['xl_group','space','family'] },
+    ]
+  },
+  {
+    label: 'Etapa 05 de 05',
+    text: 'Qual é o seu principal critério de escolha?',
+    options: [
+      { icon: '⚡', main: 'Economia de combustível', sub: 'eficiência e menor custo operacional',   tags: ['economy','efficient'] },
+      { icon: '🎯', main: 'Conforto e tecnologia',   sub: 'conectividade, assistentes e acabamento', tags: ['comfort','tech'] },
+      { icon: '🏎️', main: 'Desempenho e design',     sub: 'motor, dirigibilidade e estética',        tags: ['sport','style'] },
+      { icon: '📦', main: 'Espaço e praticidade',    sub: 'porta-malas amplo e funcionalidade',      tags: ['space','practical'] },
+    ]
+  }
+];
+
+const CARS = [
+  // ── Renault — Passeio ─────────────────────────────────────────
+  { name:'Kwid',           brand:'Renault', price:'A partir de R$ 60.990',  desc:'Hatch compacto com baixo consumo e excelente manobrabilidade urbana. O mais acessível do portfólio Renault.',                                 link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=kwid',         tags:['hatch','urban','compact','budget_low','economy','small_group','efficient'] },
+  { name:'Kwid E-TECH',    brand:'Renault', price:'A partir de R$ 89.990',  desc:'Versão 100% elétrica do Kwid. Zero emissões, recarga simplificada e custo operacional muito abaixo dos veículos a combustão.',                link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=kwid+e-tech',   tags:['hatch','urban','compact','budget_mid','economy','small_group','efficient','electric'] },
+  { name:'Kardian',        brand:'Renault', price:'A partir de R$ 110.990', desc:'SUV compacto com motor 1.0 TCe turbo flex, 130 cv, painel 100% digital, assistentes de condução e conectividade total. Design moderno e postura elevada.',             link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=kardian',       tags:['suv','crossover','urban','budget_mid','style','sport','tech','small_group','medium_group','comfort'] },
+  { name:'Boreal',         brand:'Renault', price:'A partir de R$ 179.990', desc:'SUV com motor 1.3 TCe turbo flex, 130 cv, central multimídia avançada e acabamento premium. Disponível nas versões Evolution, Techno e Iconic.',   link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=boreal',        tags:['suv','crossover','urban','budget_high','comfort','tech','medium_group','large_group','family','style'] },
+  { name:'Duster',         brand:'Renault', price:'A partir de R$ 115.990', desc:'SUV com tração 4WD disponível, porta-malas de 472 litros e motor 1.3 TCe turbo flex, 130 cv. Referência em custo-benefício para uso misto.',              link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=duster',        tags:['suv','crossover','adventure','offroad','budget_mid','space','practical','medium_group','large_group','4x4'] },
+  { name:'Oroch',          brand:'Renault', price:'A partir de R$ 125.990', desc:'Pickup cabine dupla com motor 1.3 TCe turbo flex, 130 cv, carga útil de até 800 kg e design versátil para trabalho e lazer.',                                  link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=oroch',         tags:['pickup','adventure','work','cargo','budget_mid','practical','medium_group','offroad'] },
+  { name:'Megane E-TECH',  brand:'Renault', price:'A partir de R$ 249.990', desc:'Hatchback compacto elétrico com até 470 km de autonomia (WLTP), recarga rápida DC, painel central com Google integrado e acabamento premium importado.',                       link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=megane',        tags:['hatch','electric','budget_premium','comfort','tech','style','small_group','medium_group','efficient','economy'] },
+  { name:'Koleos',         brand:'Renault', price:'A partir de R$ 259.990', desc:'SUV híbrido de grande porte importado, com tração 4WD e equipamentos de nível premium. Espaço generoso e tecnologia de ponta.',               link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=koleos',        tags:['suv','budget_premium','comfort','tech','family','medium_group','large_group','style','space'] },
+
+  // ── Renault — Utilitários ─────────────────────────────────────
+  { name:'Kangoo',         brand:'Renault', price:'A partir de R$ 139.990', desc:'Van utilitária compacta com motor 1.3 turbo flex, volume de carga de 3,8 m³ e baixo custo operacional. Ideal para última milha.',             link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=kangoo',        tags:['commercial','work','cargo','budget_mid','practical','small_group','medium_group','efficient'] },
+  { name:'Kangoo E-Tech',  brand:'Renault', price:'A partir de R$ 189.990', desc:'Versão 100% elétrica da Kangoo. Mesma capacidade de carga com zero emissões e custo energético mínimo. Ideal para frotas urbanas.',             link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=kangoo+e-tech', tags:['commercial','work','cargo','budget_high','practical','small_group','medium_group','efficient','electric'] },
+  { name:'Master Furgão',  brand:'Renault', price:'A partir de R$ 219.990', desc:'Van de grande porte com até 13 m³ de carga, disponível em diferentes comprimentos. Referência em frete e distribuição urbana.',                link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=master',        tags:['commercial','work','cargo','budget_high','practical','xl_group','space'] },
+  { name:'Master Minibus', brand:'Renault', price:'A partir de R$ 239.990', desc:'Van de transporte de passageiros com até 16 lugares, motor diesel ou flex. Ideal para translados corporativos e escolares.',                   link:'https://www.renault.santaemilia.com.br/renault-santa-emilia-sao-carlos/comprar/estoque-0km?search=master',        tags:['commercial','work','xl_group','budget_high','space','practical'] },
+
+  // ── Volkswagen — Passeio ──────────────────────────────────────
+  { name:'Polo Track',     brand:'Volkswagen', price:'A partir de R$ 92.990',  desc:'Hatch de entrada com motor 1.0 MPI aspirado, 84 cv, direção elétrica e conectividade básica. Econômico e confiável no segmento popular.',                link:'https://www.volkswagen.santaemilia.com.br/estoque?search=polo+track&km=0', tags:['hatch','urban','budget_mid','economy','small_group','compact','practical','efficient'] },
+  { name:'Novo Polo',      brand:'Volkswagen', price:'A partir de R$ 115.990', desc:'Hatch premium com motor 1.0 200 TSI (20 kgf·m), 128 cv, tela de 10,1", 6 airbags e assistentes de condução. Referência em acabamento no segmento.',  link:'https://www.volkswagen.santaemilia.com.br/estoque?search=polo&km=0',       tags:['hatch','urban','budget_mid','style','sport','compact','small_group','medium_group','tech','comfort'] },
+  { name:'Virtus',         brand:'Volkswagen', price:'A partir de R$ 108.990', desc:'Sedan com motor 1.0 200 TSI (20 kgf·m), 128 cv, porta-malas de 521 litros e acabamento acima da categoria. Porta-malas entre os maiores do segmento.',                   link:'https://www.volkswagen.santaemilia.com.br/estoque?search=virtus&km=0',     tags:['sedan','urban','budget_mid','comfort','medium_group','tech','style','compact','space'] },
+  { name:'Jetta GLI',      brand:'Volkswagen', price:'A partir de R$ 261.990', desc:'Sedan esportivo com motor 2.0 350 TSI (35 kgf·m), 230 cv, câmbio DSG de 7 marchas, suspensão esportiva e pacote completo de tecnologia premium.',          link:'https://www.volkswagen.santaemilia.com.br/estoque?search=jetta&km=0',      tags:['sedan','budget_premium','sport','style','tech','comfort','small_group','medium_group'] },
+  { name:'Nivus',          brand:'Volkswagen', price:'A partir de R$ 118.990', desc:'Crossover coupê com motor 1.0 200 TSI (20 kgf·m), 128 cv, teto inclinado, conectividade total e design diferenciado. Único no segmento.',                   link:'https://www.volkswagen.santaemilia.com.br/estoque?search=nivus&km=0',      tags:['crossover','suv','urban','budget_mid','style','sport','tech','small_group','medium_group','comfort'] },
+  { name:'T-Cross',        brand:'Volkswagen', price:'A partir de R$ 134.990', desc:'SUV com 7 airbags, frenagem autônoma de emergência, câmera traseira e espaço interno para famílias.',                                      link:'https://www.volkswagen.santaemilia.com.br/estoque?search=t-cross&km=0',    tags:['suv','crossover','budget_mid','family','comfort','small_group','medium_group','large_group','tech','space','practical'] },
+  { name:'Taos',           brand:'Volkswagen', price:'A partir de R$ 217.990', desc:'SUV médio com motor 1.4 250 TSI (25 kgf·m), 150 cv, acabamento Highline, assistentes avançados de condução e design elegante. Posicionado entre T-Cross e Tiguan.',      link:'https://www.volkswagen.santaemilia.com.br/estoque?search=taos&km=0',       tags:['suv','crossover','budget_high','comfort','tech','medium_group','large_group','family','style','space'] },
+  { name:'Tiguan Allspace', brand:'Volkswagen', price:'A partir de R$ 275.990', desc:'SUV 7 lugares com motor 2.0 350 TSI (35 kgf·m), 220 cv, painel digital 10,25", teto panorâmico e tecnologia de assistência premium.',                   link:'https://www.volkswagen.santaemilia.com.br/estoque?search=tiguan&km=0',     tags:['suv','budget_premium','comfort','tech','family','large_group','xl_group','space','style','sport'] },
+
+  // ── Volkswagen — Trabalho ─────────────────────────────────────
+  { name:'Saveiro',        brand:'Volkswagen', price:'A partir de R$ 88.990',  desc:'Pickup compacta com capacidade de carga de 700 kg, motor 1.6 flex e baixo custo operacional para uso profissional diário.',                link:'https://www.volkswagen.santaemilia.com.br/estoque?search=saveiro&km=0',    tags:['pickup','work','cargo','budget_low','budget_mid','practical','economy','small_group','urban'] },
+  { name:'Tera',           brand:'Volkswagen', price:'A partir de R$ 143.990', desc:'Pickup leve da VW com motor turbo flex, cabine dupla e carroceria integrada. Equilíbrio entre uso urbano e capacidade de transporte.',     link:'https://www.volkswagen.santaemilia.com.br/estoque?search=tera&km=0',       tags:['pickup','work','cargo','budget_low','budget_mid','urban','small_group','medium_group','practical'] },
+  { name:'Amarok',         brand:'Volkswagen', price:'A partir de R$ 280.990', desc:'Pickup premium V6 3.0 TDI 258 cv, tração 4Motion permanente, reboque de 3.500 kg e interior de padrão SUV.',                               link:'https://www.volkswagen.santaemilia.com.br/estoque?search=amarok&km=0',     tags:['pickup','work','cargo','adventure','budget_premium','comfort','tech','medium_group','large_group','4x4','offroad','style'] },
+
+  // ── Toyota — Passeio ──────────────────────────────────────────
+  { name:'Corolla',        brand:'Toyota', price:'A partir de R$ 160.990', desc:'Sedan híbrido flex com consumo de até 21,3 km/l (estrada), 9 airbags, Toyota Safety Sense e acabamento premium. O sedan mais vendido do mundo.',            link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=corolla+sedan',      tags:['sedan','budget_high','comfort','tech','efficient','medium_group','large_group','style','economy','family'] },
+  { name:'GR Corolla',     brand:'Toyota', price:'A partir de R$ 349.990', desc:'Sedan de alta performance com motor 1.6 turbo de 304 cv, tração GR-Four integral e suspensão esportiva. A versão mais radical do Corolla.',    link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=gr+corolla',         tags:['sedan','budget_premium','sport','style','tech','small_group','medium_group'] },
+  { name:'Yaris Cross',    brand:'Toyota', price:'A partir de R$ 163.020', desc:'SUV compacto híbrido ou convencional com motor 1.5 flex, design moderno, 8 airbags e Toyota Safety Sense. Ótimo custo de manutenção.',         link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=yaris+cross',        tags:['suv','crossover','urban','budget_high','comfort','tech','small_group','medium_group','efficient','economy'] },
+  { name:'Corolla Cross',  brand:'Toyota', price:'A partir de R$ 184.990', desc:'SUV híbrido flex com AWD-i elétrico disponível, consumo de até 15 km/l, tela de 8", 8 airbags e Toyota Safety Sense de série.',               link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=corolla+cross',       tags:['suv','crossover','budget_high','comfort','tech','family','efficient','small_group','medium_group','large_group','style','economy'] },
+  { name:'RAV4',           brand:'Toyota', price:'A partir de R$ 248.990', desc:'SUV híbrido 2.5 com sistema combinado de 222 cv, tração AWD-i elétrica, reboque de até 1.650 kg, 8 airbags e Toyota Safety Sense.',                   link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=rav4',               tags:['suv','budget_high','budget_premium','comfort','tech','family','medium_group','large_group','xl_group','space','adventure','offroad'] },
+  { name:'SW4',            brand:'Toyota', price:'A partir de R$ 369.990', desc:'SUV de grande porte com 7 lugares, motor 2.8 turbodiesel, tração 4x4 com reduzida e suspensão a ar nas versões topo de linha.',               link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=sw4',                tags:['suv','adventure','offroad','4x4','budget_premium','comfort','tech','family','xl_group','large_group','space'] },
+
+  // ── Toyota — Trabalho e Comercial ─────────────────────────────
+  { name:'Hilux Cabine Dupla',   brand:'Toyota', price:'A partir de R$ 219.990', desc:'Pickup referência nacional. Motor 2.8 turbodiesel de até 204 cv, tração 4x4 com reduzida, carga útil de até 1.095 kg e reboque de até 3.500 kg.',     link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=hilux',              tags:['pickup','adventure','offroad','4x4','work','cargo','budget_high','comfort','tech','large_group','medium_group'] },
+  { name:'Hilux Cabine Simples', brand:'Toyota', price:'A partir de R$ 189.990', desc:'Versão de trabalho da Hilux com cabine simples e carroceria aberta. Motor 2.8 turbodiesel e tração 4x4. Máxima capacidade de carga.',   link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=hilux+cabine+simples', tags:['pickup','work','cargo','budget_high','4x4','offroad','small_group','practical'] },
+  { name:'Hiace',          brand:'Toyota', price:'A partir de R$ 249.990', desc:'Minibus com configuração 15 passageiros + motorista, motor 2.8 turbodiesel e amplo espaço interno. Solução completa para transporte corporativo e escolar.',          link:'https://www.toyota.santaemilia.com.br/santa-emilia-ribeirao-preto/estoque-0km?search=hiace',              tags:['commercial','work','xl_group','budget_high','space','practical'] },
+
+  // ── GAC ───────────────────────────────────────────────────────
+  { name:'GS3',       brand:'GAC', price:'A partir de R$ 159.990', desc:'SUV compacto com motor 1.5 turbo, 170 cv, 25 kgf·m de torque e consumo de até 11,6 km/l. Versões Premium e Elite com teto solar panorâmico e assistentes de condução autônoma.',    link:'https://www.gac.santaemilia.com.br/estoque/0km?search=gs3',    tags:['suv','crossover','budget_high','urban','comfort','tech','small_group','medium_group','style'] },
+  { name:'GS4 Hybrid', brand:'GAC', price:'A partir de R$ 209.990', desc:'SUV médio com motorização plug-in híbrida, baixíssimo consumo de combustível e tração inteligente. Acabamento premium e tecnologia de conectividade avançada.',                     link:'https://www.gac.santaemilia.com.br/estoque/0km?search=gs4',    tags:['suv','crossover','budget_high','comfort','tech','efficient','family','medium_group','large_group','economy'] },
+  { name:'Aion Y',    brand:'GAC', price:'Consulte condições',      desc:'SUV elétrico com bateria de 63,2 kWh, autonomia de 318 km (INMETRO), motor de 204 cv e porta-malas versátil de até 1.650 litros. Zero emissões com desempenho ágil.',               link:'https://www.gac.santaemilia.com.br/estoque/0km?search=aion+y', tags:['suv','crossover','electric','budget_mid','efficient','economy','family','small_group','medium_group','tech','style'] },
+  { name:'Aion V',    brand:'GAC', price:'Consulte condições',      desc:'SUV elétrico de grande porte com bateria ferro-lítio, autonomia de até 625 km (NEDC), motor de 204 cv e tela central de 14,6". Suspensão traseira independente multi-link.',          link:'https://www.gac.santaemilia.com.br/estoque/0km?search=aion+v', tags:['suv','crossover','electric','budget_high','budget_premium','comfort','tech','medium_group','large_group','space'] },
+  { name:'Aion ES',   brand:'GAC', price:'Consulte condições',      desc:'Sedan elétrico sobre plataforma GEP 2.0, bateria de 55,2 kWh, autonomia de 314 km (INMETRO), motor de 136 cv e porta-malas de 453 litros. Design elegante e econômico.',             link:'https://www.gac.santaemilia.com.br/estoque/0km?search=aion+es', tags:['sedan','electric','budget_high','comfort','tech','efficient','small_group','medium_group','economy','style'] },
+  { name:'Hyptec HT', brand:'GAC', price:'A partir de R$ 299.990', desc:'Topo de linha da GAC. Motorização híbrida de alta performance, autonomia estendida, acabamento premium e tecnologia de ponta. O veículo mais avançado do portfólio.',                link:'https://www.gac.santaemilia.com.br/estoque/0km?search=hyptec',  tags:['suv','electric','budget_premium','comfort','tech','style','family','medium_group','large_group','sport'] },
+
+  // ── Seminovos ─────────────────────────────────────────────────
+  { name:'Seminovos', brand:'Seminovos', price:'Diversas opções disponíveis', desc:'Amplo estoque de seminovos com procedência verificada, revisão técnica completa e documentação em ordem. Condições especiais de financiamento.', link:'https://www.seminovos.santaemilia.com.br/seminovos', tags:['used','budget_low','budget_mid','practical','economy','small_group','medium_group','efficient'] },
+];
+
+const BRAND_BADGE = {
+  Toyota:     'badge-toyota',
+  Volkswagen: 'badge-volkswagen',
+  Renault:    'badge-renault',
+  GAC:        'badge-gac',
+  Seminovos:  'badge-seminovos',
+};
+
+/* ─── State ─────────────────────────────────────────────────────── */
+let answers  = [];
+let step     = 0;   // 0 = welcome, 1–5 = questions, 6 = results
+let goingBack = false;
+
+/* ─── UI helpers ────────────────────────────────────────────────── */
+function setProgress(pct) {
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function setStepTag(text) {
+  document.getElementById('step-tag').textContent = text;
+}
+
+function render(html, back = false) {
+  const main = document.getElementById('main');
+  main.innerHTML = `<div class="screen ${back ? 'anim-back' : 'anim-in'}">${html}</div>`;
+}
+
+/* ─── Welcome ───────────────────────────────────────────────────── */
+function showWelcome(back = false) {
+  step = 0;
+  setProgress(0);
+  setStepTag('');
+  render(`
+    <div class="welcome">
+      <span class="eyebrow">Consultoria de Veículos</span>
+      <h1>Encontre o veículo<br>ideal para você.</h1>
+      <p class="welcome-slogan">Conheça nossa nova ferramenta de consultoria — desenvolvida para oferecer o atendimento mais personalizado possível.</p>
+      <p class="welcome-sub">Responda 5 perguntas e receba uma indicação personalizada entre os modelos disponíveis em nossas concessionárias.</p>
+      <div class="brands-row">
+        <span class="brand-chip">Toyota</span>
+        <span class="brand-chip">Volkswagen</span>
+        <span class="brand-chip">Renault</span>
+        <span class="brand-chip">GAC</span>
+        <span class="brand-chip">Seminovos</span>
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">
+        Iniciar consulta
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  `, back);
+}
+
+/* ─── Questions ─────────────────────────────────────────────────── */
+function startQuiz() {
+  answers = [];
+  showQuestion(0);
+}
+
+function showQuestion(idx, back = false) {
+  step = idx + 1;
+  const q = QUESTIONS[idx];
+  setProgress((idx / QUESTIONS.length) * 100);
+  setStepTag(`${idx + 1} de ${QUESTIONS.length}`);
+
+  const dots = QUESTIONS.map((_, i) => {
+    let cls = 'dot';
+    if (i < idx) cls += ' done';
+    if (i === idx) cls += ' active';
+    return `<span class="${cls}"></span>`;
+  }).join('');
+
+  const opts = q.options.map((o, i) => `
+    <button class="opt" onclick="pickOption(${idx},${i})">
+      <span class="opt-icon">${o.icon || ''}</span>
+      <span class="opt-main">${o.main}</span>
+      <span class="opt-sub">${o.sub}</span>
+    </button>
+  `).join('');
+
+  const backTarget = idx === 0 ? 'showWelcome(true)' : `showQuestion(${idx - 1}, true)`;
+
+  const gridClass = q.options.length === 5 ? 'options-grid options-grid--5' : 'options-grid';
+  render(`
+    <span class="q-label">${q.label}</span>
+    <h2 class="q-text">${q.text}</h2>
+    <div class="${gridClass}">${opts}</div>
+    <div class="q-nav">
+      <button class="btn-ghost" onclick="${backTarget}">← Etapa anterior</button>
+      <div class="dots">${dots}</div>
+      <div style="width:90px"></div>
+    </div>
+  `, back);
+}
+
+function pickOption(qIdx, oIdx) {
+  answers[qIdx] = QUESTIONS[qIdx].options[oIdx];
+
+  const cards = document.querySelectorAll('.opt');
+  cards.forEach(c => c.classList.remove('selected'));
+  if (cards[oIdx]) cards[oIdx].classList.add('selected');
+
+  setTimeout(() => {
+    if (qIdx < QUESTIONS.length - 1) {
+      showQuestion(qIdx + 1);
+    } else {
+      showResults();
+    }
+  }, 380);
+}
+
+/* ─── Recommendation engine ──────────────────────────────────────── */
+function recommend() {
+  const userTags    = answers.flatMap(a => a ? a.tags : []);
+  const budgetTags  = userTags.filter(t => t.startsWith('budget_'));
+  const typeAnswer  = answers[2];
+  const TYPE_TAGS   = ['hatch','sedan','suv','crossover','pickup','used'];
+  const wantsTypes  = typeAnswer ? typeAnswer.tags.filter(t => TYPE_TAGS.includes(t)) : [];
+  const wantsWork   = userTags.includes('work') || userTags.includes('cargo');
+
+  // Ordem das faixas de orçamento (índice crescente = mais caro)
+  const BUDGET_ORDER = ['budget_low','budget_mid','budget_high','budget_premium'];
+  const userBudgetIdx = budgetTags.length > 0
+    ? BUDGET_ORDER.findIndex(b => budgetTags.includes(b))
+    : -1;
+
+  const scored = CARS.map(car => {
+    let score = car.tags.filter(t => userTags.includes(t)).length;
+
+    // ── Orçamento: penalidade graduada por faixas acima do limite ──
+    if (userBudgetIdx >= 0) {
+      const carBudgetIdxes = BUDGET_ORDER
+        .map((b, i) => car.tags.includes(b) ? i : -1)
+        .filter(i => i >= 0);
+      if (carBudgetIdxes.length > 0) {
+        const carMinIdx = Math.min(...carBudgetIdxes);
+        const diff = carMinIdx - userBudgetIdx;
+        if (diff <= 0)      score += 4;   // dentro ou abaixo do orçamento
+        else if (diff === 1) score -= 5;  // levemente acima (1 faixa)
+        else if (diff === 2) score -= 15; // consideravelmente acima (2 faixas)
+        else                 score -= 25; // muito acima (3 faixas) — praticamente excluído
+      }
+    }
+
+    // ── Tipo de veículo: penalidade severa por categoria errada ────
+    // Seminovos é neutro (serve qualquer tipo)
+    if (wantsTypes.length > 0 && car.brand !== 'Seminovos') {
+      const carMatchesType = wantsTypes.some(t => car.tags.includes(t));
+      if (!carMatchesType) score -= 10;
+    }
+
+    // ── Veículos comerciais: apenas para perfil profissional ────────
+    if (car.tags.includes('commercial') && !wantsWork) score -= 12;
+
+    return { ...car, score };
+  }).sort((a, b) => b.score - a.score);
+
+  const maxScore = Math.max(1, scored[0].score);
+  scored.forEach(c => {
+    c.matchPct = Math.round(Math.max(0, Math.min(100, (c.score / maxScore) * 100)));
+  });
+
+  // Só entra no resultado quem tem pelo menos 25% de compatibilidade relativa
+  const threshold  = maxScore * 0.25;
+  const eligible   = scored.filter(c => c.score >= threshold);
+
+  // Um por marca (dentro dos elegíveis), até 4 resultados
+  const seen = new Set();
+  const out  = [];
+  for (const c of eligible) {
+    if (out.length >= 4) break;
+    if (!seen.has(c.brand)) { seen.add(c.brand); out.push(c); }
+  }
+
+  return out;
+}
+
+/* ─── Results ───────────────────────────────────────────────────── */
+function buildSeminovosLink(recs) {
+  const BASE = 'https://www.seminovos.santaemilia.com.br/seminovos';
+
+  // Pega o modelo mais compatível (top 1) — o site só aceita busca por 1 termo por vez
+  const top = recs.find(c => c.brand !== 'Seminovos');
+  if (!top) return BASE;
+
+  // Usa a primeira palavra do nome (ex: "Corolla Cross" → "corolla", "Hilux Cabine Dupla" → "hilux")
+  const termo = top.name.split(' ')[0].toLowerCase();
+  return `${BASE}?search=${termo}`;
+}
+
+function showResults() {
+  step = QUESTIONS.length + 1;
+  setProgress(100);
+  setStepTag('');
+
+  const recs = recommend();
+
+  // Atualiza o link dos Seminovos dinamicamente com os modelos mais compatíveis
+  recs.forEach(c => {
+    if (c.brand === 'Seminovos') c.link = buildSeminovosLink(recs);
+  });
+
+  const STRIP = { Toyota:'strip-toyota', Volkswagen:'strip-volkswagen', Renault:'strip-renault', GAC:'strip-gac', Seminovos:'strip-seminovos' };
+  const cards = recs.map(car => `
+    <div class="car-card">
+      <div class="car-strip ${STRIP[car.brand]}"></div>
+      <div class="car-top">
+        <span class="badge ${BRAND_BADGE[car.brand]}">${car.brand}</span>
+        ${car.brand !== 'Seminovos' ? `
+        <div class="match-row">
+          <div class="match-track"><div class="match-fill" data-pct="${car.matchPct}"></div></div>
+          <span class="match-pct">${car.matchPct}% compatível</span>
+        </div>` : ''}
+        <div class="car-name">${car.name}</div>
+        <div class="car-price">${car.price}</div>
+        <div class="car-desc">${car.desc}</div>
+      </div>
+      <div class="car-bottom">
+        <a class="btn-ver" href="${car.link}" target="_blank" rel="noopener noreferrer">
+          Conhecer o modelo <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  `).join('');
+
+  render(`
+    <span class="eyebrow">Grupo Santa Emília · Indicação de Veículos</span>
+    <h2 class="results-heading">
+      Selecionamos ${recs.length} modelos para o seu perfil.
+    </h2>
+    <p class="results-sub">Com base nas suas respostas, indicamos os veículos mais adequados disponíveis em nossas concessionárias. Entre em contato com nossa equipe para mais informações.</p>
+    <div class="cars-grid">${cards}</div>
+    <div class="results-footer">
+      <button class="btn-ghost" onclick="showWelcome(true)">↺ Refazer a consulta</button>
+    </div>
+  `);
+
+  // Animate match bars after render
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('.match-fill').forEach(el => {
+        el.style.width = el.dataset.pct + '%';
+      });
+    }, 80);
+  });
+}
+
+/* ─── Boot ──────────────────────────────────────────────────────── */
+showWelcome();
+</script>
+</body>
+</html>
